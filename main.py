@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -15,6 +15,11 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "Hello from FastAPI Backend!"}
+
+# Explicitly handle HEAD to avoid 405s from health checks or proxies
+@app.head("/")
+def head_root():
+    return Response(status_code=200)
 
 @app.get("/api/hello")
 def hello():
